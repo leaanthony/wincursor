@@ -15,8 +15,8 @@ var (
 	setConsoleCursorInfoProc = modkernel32.NewProc("SetConsoleCursorInfo")
 )
 
-// CONSOLE_CURSOR_INFO holds the cursor information data
-type CONSOLE_CURSOR_INFO struct {
+// ConsoleCursorInfo holds the cursor information data
+type ConsoleCursorInfo struct {
 	Size    uint32
 	Visible int32
 }
@@ -36,13 +36,13 @@ func checkError(r1, r2 uintptr, err error) error {
 }
 
 // getConsoleCursorInfo - get the cursor information
-func getConsoleCursorInfo(handle uintptr, cursorInfo *CONSOLE_CURSOR_INFO) error {
+func getConsoleCursorInfo(handle uintptr, cursorInfo *ConsoleCursorInfo) error {
 	r1, r2, err := getConsoleCursorInfoProc.Call(handle, uintptr(unsafe.Pointer(cursorInfo)), 0)
 	return checkError(r1, r2, err)
 }
 
 // setConsoleCursorInfo - set the cursor information
-func setConsoleCursorInfo(handle uintptr, cursorInfo *CONSOLE_CURSOR_INFO) error {
+func setConsoleCursorInfo(handle uintptr, cursorInfo *ConsoleCursorInfo) error {
 	r1, r2, err := setConsoleCursorInfoProc.Call(handle, uintptr(unsafe.Pointer(cursorInfo)), 0)
 	return checkError(r1, r2, err)
 }
@@ -50,7 +50,7 @@ func setConsoleCursorInfo(handle uintptr, cursorInfo *CONSOLE_CURSOR_INFO) error
 // setCursorVisible - takes a boolean and sets the visibility of
 // the cursor to this value
 func setCursorVisible(visible bool) error {
-	var cursor CONSOLE_CURSOR_INFO
+	var cursor ConsoleCursorInfo
 	// -11 is stdout on windows
 	fd, err := syscall.GetStdHandle(-11)
 	if err != nil {
